@@ -1,14 +1,14 @@
 <?php
 
-use Khill\Durations;
+use Khill\Duration\Duration;
 
-class DurationsTest extends Phpunit_Framework_TestCase {
+class DurationTest extends PHPUnit_Framework_TestCase {
 
     public function setUp()
     {
         parent::setUp();
 
-        $this->d = new Durations;
+        $this->d = new Duration;
     }
 
     public function secondsSampleData()

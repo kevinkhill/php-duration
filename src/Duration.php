@@ -1,6 +1,6 @@
-<?php namespace Khill;
+<?php namespace Khill\Duration;
 
-class Durations {
+class Duration {
 
     public $hours;
     public $minutes;
