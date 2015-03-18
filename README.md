@@ -31,15 +31,17 @@ $duration = new Duration('7:31');
 echo $duration->humanize();  // 7m 31s
 echo $duration->formatted(); // 7:31
 echo $duration->toSeconds(); // 451
+```
 
-
+```
 $duration = new Duration('1h 2m 5s');
 
 echo $duration->humanize();  // 1h 2m 5s
 echo $duration->formatted(); // 1:02:05
 echo $duration->toSeconds(); // 3725
+```
 
-
+```
 $duration = new Duration('4293');
 
 echo $duration->humanize();  // 1h 11m 33s
