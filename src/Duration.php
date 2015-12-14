@@ -147,7 +147,7 @@ class Duration {
         return $this->output();
     }
 
-    public function humanize($timeStr)
+    public function humanize($timeStr = null)
     {
         if (! is_null($timeStr)) {
             $this->parse($timeStr);
