@@ -99,7 +99,7 @@ class Duration {
         return $out;
     }
 
-    public function toSeconds($timeStr)
+    public function toSeconds($timeStr = null)
     {
         if (! is_null($timeStr)) {
             $this->parse($timeStr);
@@ -110,7 +110,7 @@ class Duration {
         return $this->output();
     }
 
-    public function formatted($timeStr)
+    public function formatted($timeStr = null)
     {
         if (! is_null($timeStr)) {
             $this->parse($timeStr);
@@ -147,7 +147,7 @@ class Duration {
         return $this->output();
     }
 
-    public function humanize($timeStr)
+    public function humanize($timeStr = null)
     {
         if (! is_null($timeStr)) {
             $this->parse($timeStr);
