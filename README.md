@@ -4,16 +4,13 @@
 [![Minimum PHP Version](https://img.shields.io/badge/php-%3E%3D%205.4-8892BF.svg?style=plastic)](https://php.net/)
 [![PayPayl](https://img.shields.io/badge/paypal-donate-yellow.svg?style=plastic)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=FLP6MYY3PYSFQ)
 
-Lavacharts is a graphing / chart library for PHP5.4+ that wraps Google's Javascript Chart API
-
-Stable:
+### Converts between colon formatted time, human-readable time and seconds
 [![Current Release](https://img.shields.io/github/release/kevinkhill/php-duration.svg?style=plastic)](https://github.com/kevinkhill/php-duration/releases)
 [![Build Status](https://img.shields.io/travis/kevinkhill/php-duration/3.0.svg?style=plastic)](https://travis-ci.org/kevinkhill/php-duration)
 [![Coverage Status](https://img.shields.io/coveralls/kevinkhill/php-duration/3.0.svg?style=plastic)](https://coveralls.io/r/kevinkhill/php-duration?branch=3.0)
-# 
-## Converts between colon formatted time, human-readable time and seconds
 
-I wanted an easy way for users to input how long something took, as a duration of time.
+
+This was create for the need of an easy way for users to input how long something took, as a duration of time.
 
 The library can accept either in colon separated format, like 2:43 for 2 minutes and 43 seconds
 OR
