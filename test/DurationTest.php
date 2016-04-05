@@ -2,8 +2,8 @@
 
 use Khill\Duration\Duration;
 
-class DurationTest extends PHPUnit_Framework_TestCase {
-
+class DurationTest extends PHPUnit_Framework_TestCase
+{
     public function setUp()
     {
         parent::setUp();
@@ -13,15 +13,15 @@ class DurationTest extends PHPUnit_Framework_TestCase {
 
     public function secondsSampleData()
     {
-        return [
-            [ 1, '1 s'],
-            [ 1, '1 sec'],
-            [ 3, '3S'],
-            [ 7, '7 S'],
-            [51, '51seconds'],
-            [ 4, '4 Sec.'],
-            [15, '15 SEcONDs']
-        ];
+        return array(
+            array( 1, '1 s'),
+            array( 1, '1 sec'),
+            array( 3, '3S'),
+            array( 7, '7 S'),
+            array(51, '51seconds'),
+            array( 4, '4 Sec.'),
+            array(15, '15 SEcONDs')
+        );
     }
 
     /**
@@ -35,15 +35,15 @@ class DurationTest extends PHPUnit_Framework_TestCase {
 
     public function minutesSampleData()
     {
-        return [
-            [ 1, '1 m'],
-            [ 4, '4 min'],
-            [ 6, '6M'],
-            [14, '14 Ms'],
-            [31, '31 minutes'],
-            [ 9, '9Min.'],
-            [11, '11 MINUTE']
-        ];
+        return array(
+            array( 1, '1 m'),
+            array( 4, '4 min'),
+            array( 6, '6M'),
+            array(14, '14 Ms'),
+            array(31, '31 minutes'),
+            array( 9, '9Min.'),
+            array(11, '11 MINUTE')
+        );
     }
 
     /**
@@ -57,15 +57,15 @@ class DurationTest extends PHPUnit_Framework_TestCase {
 
     public function hoursSampleData()
     {
-        return [
-            [ 1, '1 h'],
-            [ 1, '1 hr'],
-            [ 1, '1H'],
-            [24, '24 Hrs'],
-            [ 3, '3hours'],
-            [ 6, '6HoUr'],
-            [14, '14 HOURs']
-        ];
+        return array(
+            array( 1, '1 h'),
+            array( 1, '1 hr'),
+            array( 1, '1H'),
+            array(24, '24 Hrs'),
+            array( 3, '3hours'),
+            array( 6, '6HoUr'),
+            array(14, '14 HOURs')
+        );
     }
 
     /**
