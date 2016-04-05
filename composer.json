@@ -19,9 +19,10 @@
         "phpunit/phpunit": "~4.8",
         "satooshi/php-coveralls": "~1.0",
         "symfony/yaml": "~2",
-        "symfony/config": "~2.1",
+        "symfony/config": "~2",
         "symfony/console": "~2",
         "symfony/stopwatch": "~2",
+        "symfony/filesystem": "~2",
         "doctrine/instantiator": "1.0.4"
     },
     "autoload": {
