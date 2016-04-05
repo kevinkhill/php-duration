@@ -1,18 +1,24 @@
-<?php namespace Khill\Duration;
+<?php
 
-class Duration {
+namespace Khill\Duration;
 
+class Duration
+{
     public $hours;
     public $minutes;
     public $seconds;
 
-    private $timeStr;
     private $output;
     private $hoursRegex;
     private $minutesRegex;
     private $secondsRegex;
 
-    public function __construct($timeStr=null)
+    /**
+     * Duration constructor.
+     *
+     * @param null $duration
+     */
+    public function __construct($duration = null)
     {
         $this->hours   = 0;
         $this->minutes = 0;
@@ -23,18 +29,23 @@ class Duration {
         $this->minutesRegex = '/([0-9]{1,2})\s?(?:m|M)/';
         $this->secondsRegex = '/([0-9]{1,2})\s?(?:s|S)/';
 
-        if (! is_null($timeStr)) {
-            $this->parse($timeStr);
+        if (! is_null($duration)) {
+            $this->parse($duration);
         }
     }
 
-    public function parse($timeStr)
+    /**
+     * Attempt to parse one of the forms of duration.
+     *
+     * @param  int|string $duration A string or number, representing a duration
+     * @return self|bool returns the Duration object if successful, otherwise false
+     */
+    public function parse($duration)
     {
         $this->reset();
-        $this->timeStr = $timeStr;
 
-        if (is_numeric($this->timeStr)) {
-            $this->seconds = (int) $this->timeStr;
+        if (is_numeric($duration)) {
+            $this->seconds = (int) $duration;
 
             if ($this->seconds >= 60) {
                 $this->minutes = (int) floor($this->seconds / 60);
@@ -47,8 +58,8 @@ class Duration {
             }
 
             return $this;
-        } else if (preg_match('/\:/', $this->timeStr)) {
-            $parts = explode(':', $this->timeStr);
+        } else if (preg_match('/\:/', $duration)) {
+            $parts = explode(':', $duration);
 
             if (count($parts) == 2) {
                 $this->minutes = (int) $parts[0];
@@ -60,19 +71,19 @@ class Duration {
             }
 
             return $this;
-        } else if (preg_match($this->hoursRegex, $this->timeStr) ||
-                   preg_match($this->minutesRegex, $this->timeStr) ||
-                   preg_match($this->secondsRegex, $this->timeStr))
+        } else if (preg_match($this->hoursRegex, $duration) ||
+                   preg_match($this->minutesRegex, $duration) ||
+                   preg_match($this->secondsRegex, $duration))
         {
-            if (preg_match($this->hoursRegex, $this->timeStr, $matches)) {
+            if (preg_match($this->hoursRegex, $duration, $matches)) {
                 $this->hours = (int) $matches[1];
             }
 
-            if (preg_match($this->minutesRegex, $this->timeStr, $matches)) {
+            if (preg_match($this->minutesRegex, $duration, $matches)) {
                 $this->minutes = (int) $matches[1];
             }
 
-            if (preg_match($this->secondsRegex, $this->timeStr, $matches)) {
+            if (preg_match($this->secondsRegex, $duration, $matches)) {
                 $this->seconds = (int) $matches[1];
             }
 
@@ -82,38 +93,37 @@ class Duration {
         }
     }
 
-    private function reset()
+    /**
+     * Returns the duration as an amount of seconds.
+     *
+     * For example, one hour and 42 minutes would be "102"
+     *
+     * @param  int|string $duration A string or number, representing a duration
+     * @return int
+     */
+    public function toSeconds($duration = null)
     {
-        $this->output  = '';
-        $this->seconds = 0;
-        $this->minutes = 0;
-        $this->hours   = 0;
-    }
-
-    private function output()
-    {
-        $out = $this->output;
-
-        $this->reset();
-
-        return $out;
-    }
-
-    public function toSeconds($timeStr = null)
-    {
-        if (! is_null($timeStr)) {
-            $this->parse($timeStr);
+        if (! is_null($duration)) {
+            $this->parse($duration);
         }
 
         $this->output = ($this->hours * 60 * 60) + ($this->minutes * 60) + $this->seconds;
 
-        return $this->output();
+        return (int) $this->output();
     }
 
-    public function formatted($timeStr = null)
+    /**
+     * Returns the duration as a colon formatted string
+     *
+     * For example, one hour and 42 minutes would be "1:43"
+     *
+     * @param  int|string $duration A string or number, representing a duration
+     * @return string
+     */
+    public function formatted($duration = null)
     {
-        if (! is_null($timeStr)) {
-            $this->parse($timeStr);
+        if (! is_null($duration)) {
+            $this->parse($duration);
         }
 
         if ($this->seconds > 0)  {
@@ -147,10 +157,18 @@ class Duration {
         return $this->output();
     }
 
-    public function humanize($timeStr = null)
+    /**
+     * Returns the duration as a human-readable string.
+     *
+     * For example, one hour and 42 minutes would be "1h 42m"
+     *
+     * @param  int|string $duration A string or number, representing a duration
+     * @return string
+     */
+    public function humanize($duration = null)
     {
-        if (! is_null($timeStr)) {
-            $this->parse($timeStr);
+        if (! is_null($duration)) {
+            $this->parse($duration);
         }
 
         if ($this->seconds > 0) {
@@ -168,5 +186,34 @@ class Duration {
         return trim($this->output());
     }
 
+
+    /**
+     * Resets the Duration object by clearing the output and values.
+     *
+     * @access private
+     * @return void
+     */
+    private function reset()
+    {
+        $this->output  = '';
+        $this->seconds = 0;
+        $this->minutes = 0;
+        $this->hours   = 0;
+    }
+
+    /**
+     * Returns the output of the Duration object and resets.
+     *
+     * @access private
+     * @return string
+     */
+    private function output()
+    {
+        $out = $this->output;
+
+        $this->reset();
+
+        return $out;
+    }
 }
 

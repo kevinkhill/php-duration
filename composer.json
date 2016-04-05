@@ -1,11 +1,18 @@
 {
     "name": "khill/php-duration",
     "description": "Converts between colon formatted time, human-readable time and seconds",
+    "keywords": [
+        "duration",
+        "time",
+        "seconds",
+        "convert"
+    ],
     "license": "MIT",
     "authors": [
         {
             "name": "Kevin Hill",
-            "email": "kevinkhill@gmail.com"
+            "email": "kevinkhill@gmail.com",
+            "role": "Creator"
         }
     ],
     "require-dev": {
@@ -15,6 +22,9 @@
         "psr-4": {
             "Khill\\Duration\\": "src/"
         }
+    },
+    "scripts": {
+        "test": "phpunit -c phpunit.xml"
     },
     "minimum-stability": "stable"
 }

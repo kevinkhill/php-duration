@@ -1,10 +1,2 @@
+.idea/
 vendor/
-_site/
-tmp/
-build/
-cache/
-docs/
-
-composer.lock
-
-*DS_Store
