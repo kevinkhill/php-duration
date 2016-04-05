@@ -24,13 +24,13 @@ Seconds, colon separated, abbreviated, all three can be parsed and interchanged.
 
 
 # Install
-```
+```bash
 composer require khill/php-duration:~1.0
 ```
 
 
 # Usage
-```
+```php
 use Khill\Duration\Duration;
 
 
@@ -41,7 +41,7 @@ echo $duration->formatted(); // 7:31
 echo $duration->toSeconds(); // 451
 ```
 
-```
+```php
 $duration = new Duration('1h 2m 5s');
 
 echo $duration->humanize();  // 1h 2m 5s
@@ -49,7 +49,7 @@ echo $duration->formatted(); // 1:02:05
 echo $duration->toSeconds(); // 3725
 ```
 
-```
+```php
 $duration = new Duration('4293');
 
 echo $duration->humanize();  // 1h 11m 33s
@@ -59,7 +59,7 @@ echo $duration->toSeconds(); // 4293
 
 # Note
 You do not have to create a new object for each conversion, you can also pass any of the three forms into any of the methods to get the immediate output.
-```
+```php
 $duration = new Duration;
 
 echo $duration->humanize('1h 2m 5s');  // 1h 2m 5s
