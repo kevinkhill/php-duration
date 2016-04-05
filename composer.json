@@ -15,8 +15,11 @@
             "role": "Creator"
         }
     ],
+    "require": {
+        "php": ">=5.3"
+    },
     "require-dev": {
-        "phpunit/phpunit": "~4.5",
+        "phpunit/phpunit": "~4.8",
         "satooshi/php-coveralls": "~1.0"
     },
     "autoload": {
