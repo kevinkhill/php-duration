@@ -27,5 +27,11 @@ before_install:
 install:
   - composer install --no-progress --no-interaction --prefer-dist
 
+before_script:
+  - mkdir -p build/logs
+
 script:
   - composer run test
+
+after_script:
+  - php ./vendor/bin/coveralls
