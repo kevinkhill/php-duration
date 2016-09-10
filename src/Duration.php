@@ -96,7 +96,7 @@ class Duration
     /**
      * Returns the duration as an amount of seconds.
      *
-     * For example, one hour and 42 minutes would be "102"
+     * For example, one hour and 42 minutes would be "6120"
      *
      * @param  int|string $duration A string or number, representing a duration
      * @return int
@@ -110,6 +110,27 @@ class Duration
         $this->output = ($this->hours * 60 * 60) + ($this->minutes * 60) + $this->seconds;
 
         return (int) $this->output();
+    }
+
+    /**
+     * Returns the duration as an amount of seconds.
+     *
+     * For example, one hour and 42 minutes would be "102" minutes
+     *
+     * @param  int|string $duration A string or number, representing a duration
+     * @param  boolean $roundToInteger Should the number be rounded and returned as integer
+     * @return int
+     */
+    public function toMinutes($duration = null, $roundToInteger = false)
+    {
+        if (! is_null($duration)) {
+            $this->parse($duration);
+        }
+
+        $this->output = ($this->hours * 60 * 60) + ($this->minutes * 60) + $this->seconds;
+        $result = intval($this->output()) / 60;
+
+        return $roundToInteger ? intval(round($result, 0)) : $result;
     }
 
     /**
