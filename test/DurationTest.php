@@ -64,7 +64,8 @@ class DurationTest extends PHPUnit_Framework_TestCase
             array(24, '24 Hrs'),
             array( 3, '3hours'),
             array( 6, '6HoUr'),
-            array(14, '14 HOURs')
+            array(14, '14 HOURs'),
+            array(36, '36h')
         );
     }
 
@@ -76,6 +77,29 @@ class DurationTest extends PHPUnit_Framework_TestCase
         $this->d->parse($hrStr);
         $this->assertEquals($intVal, $this->d->hours);
     }
+
+    public function daysSampleData()
+    {
+        return array(
+            array( 1, '1 d'),
+            array( 1, '1 D'),
+            array( 1, '1D'),
+            array(24, '24 ds'),
+            array( 3, '3days'),
+            array( 6, '6DaY'),
+            array(14, '14 DAYs')
+        );
+    }
+
+    /**
+     * @dataProvider daysSampleData
+     */
+    public function testGettingValueFromDaySuffixes($intVal, $dayStr)
+    {
+        $this->d->parse($dayStr);
+        $this->assertEquals($intVal, $this->d->days);
+    }
+
 
     public function testConvertingSecondsToFormattedString()
     {
@@ -137,15 +161,18 @@ class DurationTest extends PHPUnit_Framework_TestCase
 
     public function testConvertSecondsToHumanizedString()
     {
-        $this->assertEquals('4s',       $this->d->humanize(4));
-        $this->assertEquals('42s',      $this->d->humanize(42));
-        $this->assertEquals('1m 2s',    $this->d->humanize(62));
-        $this->assertEquals('1m 42s',   $this->d->humanize(102));
-        $this->assertEquals('10m 47s',  $this->d->humanize(647));
-        $this->assertEquals('1h',       $this->d->humanize(3600));
-        $this->assertEquals('1h 5s',    $this->d->humanize(3605));
-        $this->assertEquals('1h 1m',    $this->d->humanize(3660));
-        $this->assertEquals('1h 1m 5s', $this->d->humanize(3665));
+        $this->assertEquals('4s',         $this->d->humanize(4));
+        $this->assertEquals('42s',        $this->d->humanize(42));
+        $this->assertEquals('1m 2s',      $this->d->humanize(62));
+        $this->assertEquals('1m 42s',     $this->d->humanize(102));
+        $this->assertEquals('10m 47s',    $this->d->humanize(647));
+        $this->assertEquals('1h',         $this->d->humanize(3600));
+        $this->assertEquals('1h 5s',      $this->d->humanize(3605));
+        $this->assertEquals('1h 1m',      $this->d->humanize(3660));
+        $this->assertEquals('1h 1m 5s',   $this->d->humanize(3665));
+        $this->assertEquals('3d',         $this->d->humanize(259200));
+        $this->assertEquals('2d 11h 30m', $this->d->humanize(214200));
+
     }
 
     /**
@@ -155,15 +182,25 @@ class DurationTest extends PHPUnit_Framework_TestCase
      */
     public function testConvertHumanizedStringToSeconds()
     {
-        $this->assertEquals(4,    $this->d->toSeconds('4s'));
-        $this->assertEquals(42,   $this->d->toSeconds('42s'));
-        $this->assertEquals(72,   $this->d->toSeconds('1m 12s'));
-        $this->assertEquals(102,  $this->d->toSeconds('1m 42s'));
-        $this->assertEquals(647,  $this->d->toSeconds('10m 47s'));
-        $this->assertEquals(3600, $this->d->toSeconds('1h'));
-        $this->assertEquals(3605, $this->d->toSeconds('1h 5s'));
-        $this->assertEquals(3660, $this->d->toSeconds('1h 1m'));
-        $this->assertEquals(3665, $this->d->toSeconds('1h 1m 5s'));
+        $this->assertEquals(4,      $this->d->toSeconds('4s'));
+        $this->assertEquals(42,     $this->d->toSeconds('42s'));
+        $this->assertEquals(72,     $this->d->toSeconds('1m 12s'));
+        $this->assertEquals(102,    $this->d->toSeconds('1m 42s'));
+        $this->assertEquals(647,    $this->d->toSeconds('10m 47s'));
+        $this->assertEquals(3600,   $this->d->toSeconds('1h'));
+        $this->assertEquals(3605,   $this->d->toSeconds('1h 5s'));
+        $this->assertEquals(3660,   $this->d->toSeconds('1h 1m'));
+        $this->assertEquals(3665,   $this->d->toSeconds('1h 1m 5s'));
+        $this->assertEquals(86400,  $this->d->toSeconds('1d'));
+        $this->assertEquals(214200, $this->d->toSeconds('2d 11h 30m'));
+        $this->assertEquals(214214, $this->d->toSeconds('2d 11h 30m 14s'));
+    }
+
+    public function testConvertHumanizedStringToSeconds7HourDay()
+    {
+        $d = new Duration(null, 7);
+        $this->assertEquals(25200,  $d->toSeconds('1d'));
+        $this->assertEquals(91800, $d->toSeconds('2d 11h 30m'));
     }
 
 }
