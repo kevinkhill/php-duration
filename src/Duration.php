@@ -94,7 +94,7 @@ class Duration
             if (preg_match($this->daysRegex, $duration, $matches)) {
                 $this->days = (int) $matches[1];
             }
-            
+
             if (preg_match($this->hoursRegex, $duration, $matches)) {
                 $this->hours = (int) $matches[1];
             }
@@ -163,7 +163,7 @@ class Duration
      */
     public function formatted($duration = null)
     {
-        
+
         if (! is_null($duration)) {
             $this->parse($duration);
         }
@@ -171,7 +171,7 @@ class Duration
         $hours = $this->hours + ($this->days * $this->hoursPerDay);
 
         if ($this->seconds > 0)  {
-            if ($this->seconds < 9 && ($this->minutes > 0 || $hours > 0)) {
+            if ($this->seconds <= 9 && ($this->minutes > 0 || $hours > 0)) {
                 $this->output .= '0' . $this->seconds;
             } else {
                 $this->output .= $this->seconds;
@@ -183,7 +183,7 @@ class Duration
         }
 
         if ($this->minutes > 0) {
-            if ($this->minutes < 9 && $hours > 0) {
+            if ($this->minutes <= 9 && $hours > 0) {
                 $this->output = '0' . $this->minutes . ':' . $this->output;
             } else {
                 $this->output = $this->minutes . ':' . $this->output;
