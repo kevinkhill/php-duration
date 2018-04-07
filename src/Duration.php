@@ -157,11 +157,15 @@ class Duration
      * Returns the duration as a colon formatted string
      *
      * For example, one hour and 42 minutes would be "1:43"
+     * With $zeroFill to true :
+     *   - 42 minutes would be "0:42:00"
+     *   - 28 seconds would be "0:00:28"
      *
      * @param  int|string $duration A string or number, representing a duration
+     * @param  bool $zeroFill A boolean, to force zero-fill result or not (see example)
      * @return string
      */
-    public function formatted($duration = null)
+    public function formatted($duration = null, $zeroFill = false)
     {
 
         if (! is_null($duration)) {
@@ -171,7 +175,7 @@ class Duration
         $hours = $this->hours + ($this->days * $this->hoursPerDay);
 
         if ($this->seconds > 0)  {
-            if ($this->seconds <= 9 && ($this->minutes > 0 || $hours > 0)) {
+            if ($this->seconds <= 9 && ($this->minutes > 0 || $hours > 0 || $zeroFill)) {
                 $this->output .= '0' . $this->seconds;
             } else {
                 $this->output .= $this->seconds;
@@ -183,19 +187,23 @@ class Duration
         }
 
         if ($this->minutes > 0) {
-            if ($this->minutes <= 9 && $hours > 0) {
+            if ($this->minutes <= 9 && ($hours > 0 || $zeroFill)) {
                 $this->output = '0' . $this->minutes . ':' . $this->output;
             } else {
                 $this->output = $this->minutes . ':' . $this->output;
             }
         } else {
-            if ($hours > 0) {
+            if ($hours > 0 || $zeroFill) {
                 $this->output = '00' . ':' . $this->output;
             }
         }
 
         if ($hours > 0) {
             $this->output = $hours . ':' . $this->output;
+        } else {
+            if ($zeroFill) {
+                $this->output = '0' . ':' . $this->output;
+            }
         }
 
         return $this->output();
