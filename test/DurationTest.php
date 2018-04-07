@@ -119,6 +119,24 @@ class DurationTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('1:09:09', $this->d->formatted(4149));
     }
 
+    public function testConvertingSecondsToFormattedStringZeroFilled()
+    {
+        $this->assertEquals('0:00:04', $this->d->formatted(4, true));
+        $this->assertEquals('0:00:09', $this->d->formatted(9, true));
+        $this->assertEquals('0:00:42', $this->d->formatted(42, true));
+        $this->assertEquals('0:01:02', $this->d->formatted(62, true));
+        $this->assertEquals('0:01:09', $this->d->formatted(69, true));
+        $this->assertEquals('0:01:42', $this->d->formatted(102, true));
+        $this->assertEquals('0:10:47', $this->d->formatted(647, true));
+        $this->assertEquals('1:00:00', $this->d->formatted(3600, true));
+        $this->assertEquals('1:00:01', $this->d->formatted(3601, true));
+        $this->assertEquals('1:00:11', $this->d->formatted(3611, true));
+        $this->assertEquals('1:01:00', $this->d->formatted(3660, true));
+        $this->assertEquals('1:01:14', $this->d->formatted(3674, true));
+        $this->assertEquals('1:04:25', $this->d->formatted(3865, true));
+        $this->assertEquals('1:09:09', $this->d->formatted(4149, true));
+    }
+
     public function testConvertingFormattedStringsToSeconds()
     {
         $this->assertEquals(4,    $this->d->toSeconds('4'));
