@@ -15,10 +15,10 @@ The library can accept either in colon separated format, like 2:43 for 2 minutes
 OR
 written as human readable or abbreviated time, such as 6m21s for 6 minutes and 21 seconds.
 
-Both can be converted into seconds and minutes for easy storage into a database.
+Both can be converted into seconds and minutes with precision for easy storage into a database.
 
 Seconds, colon separated, abbreviated, all three can be parsed and interchanged.
- - supports hours, minutes, and seconds
+ - supports hours, minutes, and seconds (with microseconds)
  - humanized input supports any form of the words "hour", "minute", "seconds"
    - Example, you could input 1h4m2s or 4 Hr. 32 Min.
 
@@ -40,7 +40,8 @@ echo $duration->humanize();  // 7m 31s
 echo $duration->formatted(); // 7:31
 echo $duration->toSeconds(); // 451
 echo $duration->toMinutes(); // 7.5166
-echo $duration->toMinutes(null, true); // 8
+echo $duration->toMinutes(null, 0); // 8
+echo $duration->toMinutes(null, 2); // 7.52
 ```
 
 ```php
@@ -50,7 +51,7 @@ echo $duration->humanize();  // 1h 2m 5s
 echo $duration->formatted(); // 1:02:05
 echo $duration->toSeconds(); // 3725
 echo $duration->toMinutes(); // 62.0833
-echo $duration->toMinutes(null, true); // 62
+echo $duration->toMinutes(null, 0); // 62
 ```
 
 ```php
@@ -60,7 +61,7 @@ echo $duration->humanize();  // 1h 11m 33s
 echo $duration->formatted(); // 1:11:33
 echo $duration->toSeconds(); // 4293
 echo $duration->toMinutes(); // 71.55
-echo $duration->toMinutes(null, true); // 72
+echo $duration->toMinutes(null, 0); // 72
 ```
 
 # Note
