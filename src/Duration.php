@@ -139,7 +139,7 @@ class Duration
         }
         $this->output = ($this->days * $this->hoursPerDay * 60 * 60) + ($this->hours * 60 * 60) + ($this->minutes * 60) + $this->seconds;
 
-        return $precision !== false ? intval(round($this->output, $precision)) : $this->output;
+        return $precision !== false ? round($this->output, $precision) : $this->output;
     }
 
     /**
@@ -165,7 +165,7 @@ class Duration
         $this->output = ($this->days * $this->hoursPerDay * 60 * 60) + ($this->hours * 60 * 60) + ($this->minutes * 60) + $this->seconds;
         $result = intval($this->output()) / 60;
 
-        return $precision !== false ? intval(round($result, $precision)) : $result;
+        return $precision !== false ? round($result, $precision) : $result;
     }
 
     /**

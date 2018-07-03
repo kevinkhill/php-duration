@@ -184,14 +184,30 @@ class DurationTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(62.96, $this->d->toSeconds('1:02.96'));
         $this->assertEquals(69.23, $this->d->toSeconds('1:09.23'));
         $this->assertEquals(102.55, $this->d->toSeconds('1:42.55'));
-        $this->assertEquals(647, $this->d->toSeconds('10:47'));
-        $this->assertEquals(3600, $this->d->toSeconds('1:00:00'));
-        $this->assertEquals(3601, $this->d->toSeconds('1:00:01'));
-        $this->assertEquals(3611, $this->d->toSeconds('1:00:11'));
-        $this->assertEquals(3660, $this->d->toSeconds('1:01:00'));
-        $this->assertEquals(3674, $this->d->toSeconds('1:01:14'));
-        $this->assertEquals(3865, $this->d->toSeconds('1:04:25'));
-        $this->assertEquals(4149, $this->d->toSeconds('1:09:09'));
+        $this->assertEquals(647.999, $this->d->toSeconds('10:47.999'));
+        $this->assertEquals(3600.9987, $this->d->toSeconds('1:00:00.9987'));
+        $this->assertEquals(3601.000111, $this->d->toSeconds('1:00:01.000111'));
+        $this->assertEquals(3611.0999, $this->d->toSeconds('1:00:11.0999'));
+        $this->assertEquals(3660.500001, $this->d->toSeconds('1:01:00.500001'));
+        $this->assertEquals(3674.00001, $this->d->toSeconds('1:01:14.00001'));
+        $this->assertEquals(3865.499999, $this->d->toSeconds('1:04:25.499999'));
+        $this->assertEquals(4149.499999, $this->d->toSeconds('1:09:09.499999'));
+
+        // precision
+        $this->assertEquals(5, $this->d->toSeconds('4.6', 0));
+        $this->assertEquals(10, $this->d->toSeconds('9.5', 0));
+        $this->assertEquals(42.1, $this->d->toSeconds('42.1', 1));
+        $this->assertEquals(63, $this->d->toSeconds('1:02.96', 1));
+        $this->assertEquals(69.23, $this->d->toSeconds('1:09.23'));
+        $this->assertEquals(102.55, $this->d->toSeconds('1:42.55', 2));
+        $this->assertEquals(648, $this->d->toSeconds('10:47.999', 2));
+        $this->assertEquals(3601, $this->d->toSeconds('1:00:00.9987', 2));
+        $this->assertEquals(3601, $this->d->toSeconds('1:00:01.000111', 3));
+        $this->assertEquals(3611.0999, $this->d->toSeconds('1:00:11.0999', 4));
+        $this->assertEquals(3660.5, $this->d->toSeconds('1:01:00.500001', 2));
+        $this->assertEquals(3674, $this->d->toSeconds('1:01:14.00001', 2));
+        $this->assertEquals(3865.5, $this->d->toSeconds('1:04:25.499999', 3));
+        $this->assertEquals(4149.499997, $this->d->toSeconds('1:09:09.4999971', 6));
     }
 
     public function testConvertingFormattedStringsToMinutes()
@@ -211,6 +227,24 @@ class DurationTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(3865 / 60, $this->d->toMinutes('1:04:25'));
         $this->assertEquals(4149 / 60, $this->d->toMinutes('1:09:09'));
 
+        // to integer - BC
+        $this->assertEquals(0, $this->d->toMinutes('4', true));
+        $this->assertEquals(0, $this->d->toMinutes('9', true));
+        $this->assertEquals(1, $this->d->toMinutes('42', true));
+        $this->assertEquals(1, $this->d->toMinutes('1:02', true));
+        $this->assertEquals(1, $this->d->toMinutes('1:09', true));
+        $this->assertEquals(2, $this->d->toMinutes('1:42', true));
+        $this->assertEquals(11, $this->d->toMinutes('10:47', true));
+        $this->assertEquals(60, $this->d->toMinutes('1:00:00', true));
+        $this->assertEquals(60, $this->d->toMinutes('1:00:01', true));
+        $this->assertEquals(60, $this->d->toMinutes('1:00:11', true));
+        $this->assertEquals(61, $this->d->toMinutes('1:01:00', true));
+        $this->assertEquals(61, $this->d->toMinutes('1:01:14', true));
+        $this->assertEquals(64, $this->d->toMinutes('1:04:25', true));
+        $this->assertEquals(65, $this->d->toMinutes('1:04:55', true));
+        $this->assertEquals(69, $this->d->toMinutes('1:09:09', true));
+
+        // precision
         $this->assertEquals(0, $this->d->toMinutes('4', 0));
         $this->assertEquals(0, $this->d->toMinutes('9', 0));
         $this->assertEquals(1, $this->d->toMinutes('42', 0));
@@ -226,6 +260,22 @@ class DurationTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(64, $this->d->toMinutes('1:04:25', 0));
         $this->assertEquals(65, $this->d->toMinutes('1:04:55', 0));
         $this->assertEquals(69, $this->d->toMinutes('1:09:09', 0));
+
+        $this->assertEquals(0.1, $this->d->toMinutes('4', 1));
+        $this->assertEquals(0.15, $this->d->toMinutes('9', 2));
+        $this->assertEquals(0.7, $this->d->toMinutes('42', 3));
+        $this->assertEquals(1, $this->d->toMinutes('1:02', 1));
+        $this->assertEquals(1.15, $this->d->toMinutes('1:09', 2));
+        $this->assertEquals(1.7, $this->d->toMinutes('1:42', 3));
+        $this->assertEquals(10.8, $this->d->toMinutes('10:47', 1));
+        $this->assertEquals(60, $this->d->toMinutes('1:00:00', 2));
+        $this->assertEquals(60.017, $this->d->toMinutes('1:00:01', 3));
+        $this->assertEquals(60.2, $this->d->toMinutes('1:00:11', 1));
+        $this->assertEquals(61, $this->d->toMinutes('1:01:00', 2));
+        $this->assertEquals(61.233, $this->d->toMinutes('1:01:14', 3));
+        $this->assertEquals(64.42, $this->d->toMinutes('1:04:25', 2));
+        $this->assertEquals(64.92, $this->d->toMinutes('1:04:55', 2));
+        $this->assertEquals(69.15, $this->d->toMinutes('1:09:09', 2));
     }
 
     public function testConvertSecondsToHumanizedString()
