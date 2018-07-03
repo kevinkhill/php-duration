@@ -2,7 +2,7 @@
 
 use Khill\Duration\Duration;
 
-class DurationTest extends \PHPUnit\Framework\TestCase
+class DurationTest extends PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
