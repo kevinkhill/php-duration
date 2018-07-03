@@ -24,20 +24,20 @@ class Duration
      */
     public function __construct($duration = null, $hoursPerDay = 24)
     {
-        $this->days    = 0;
-        $this->hours   = 0;
+        $this->days = 0;
+        $this->hours = 0;
         $this->minutes = 0;
         $this->seconds = 0;
 
-        $this->output       = '';
-        $this->daysRegex    = '/([0-9]{1,2})\s?(?:d|D)/';
-        $this->hoursRegex   = '/([0-9]{1,2})\s?(?:h|H)/';
+        $this->output = '';
+        $this->daysRegex = '/([0-9]{1,2})\s?(?:d|D)/';
+        $this->hoursRegex = '/([0-9]{1,2})\s?(?:h|H)/';
         $this->minutesRegex = '/([0-9]{1,2})\s?(?:m|M)/';
         $this->secondsRegex = '/([0-9]{1,2}(\.\d+)?)\s?(?:s|S)/';
 
         $this->hoursPerDay = $hoursPerDay;
 
-        if (! is_null($duration)) {
+        if (!is_null($duration)) {
             $this->parse($duration);
         }
     }
@@ -53,28 +53,28 @@ class Duration
         $this->reset();
 
         if (is_numeric($duration)) {
-            $this->seconds = (float) $duration;
+            $this->seconds = (float)$duration;
 
             if ($this->seconds >= 60) {
-                $this->minutes = (int) floor($this->seconds / 60);
+                $this->minutes = (int)floor($this->seconds / 60);
 
                 // count current precision
                 $precision = 0;
-                if (($delimiterPos = strpos($this->seconds, '.'))!==false) {
-                    $precision = strlen(substr($this->seconds, $delimiterPos+1));
+                if (($delimiterPos = strpos($this->seconds, '.')) !== false) {
+                    $precision = strlen(substr($this->seconds, $delimiterPos + 1));
                 }
 
-                $this->seconds = (float) round(($this->seconds - ($this->minutes * 60)), $precision);
+                $this->seconds = (float)round(($this->seconds - ($this->minutes * 60)), $precision);
             }
 
             if ($this->minutes >= 60) {
-                $this->hours   = (int) floor($this->minutes / 60);
-                $this->minutes = (int) ($this->minutes - ($this->hours * 60));
+                $this->hours = (int)floor($this->minutes / 60);
+                $this->minutes = (int)($this->minutes - ($this->hours * 60));
             }
 
             if ($this->hours >= $this->hoursPerDay) {
-                $this->days   = (int) floor($this->hours / $this->hoursPerDay);
-                $this->hours = (int) ($this->hours - ($this->days * $this->hoursPerDay));
+                $this->days = (int)floor($this->hours / $this->hoursPerDay);
+                $this->hours = (int)($this->hours - ($this->days * $this->hoursPerDay));
             }
 
             return $this;
@@ -84,36 +84,37 @@ class Duration
             $parts = explode(':', $duration);
 
             if (count($parts) == 2) {
-                $this->minutes = (int) $parts[0];
-                $this->seconds = (float) $parts[1];
-            } else if (count($parts) == 3) {
-                $this->hours   = (int) $parts[0];
-                $this->minutes = (int) $parts[1];
-                $this->seconds = (float) $parts[2];
+                $this->minutes = (int)$parts[0];
+                $this->seconds = (float)$parts[1];
+            } else {
+                if (count($parts) == 3) {
+                    $this->hours = (int)$parts[0];
+                    $this->minutes = (int)$parts[1];
+                    $this->seconds = (float)$parts[2];
+                }
             }
 
             return $this;
         }
 
         if (preg_match($this->daysRegex, $duration) ||
-                   preg_match($this->hoursRegex, $duration) ||
-                   preg_match($this->minutesRegex, $duration) ||
-                   preg_match($this->secondsRegex, $duration))
-        {
+            preg_match($this->hoursRegex, $duration) ||
+            preg_match($this->minutesRegex, $duration) ||
+            preg_match($this->secondsRegex, $duration)) {
             if (preg_match($this->daysRegex, $duration, $matches)) {
-                $this->days = (int) $matches[1];
+                $this->days = (int)$matches[1];
             }
 
             if (preg_match($this->hoursRegex, $duration, $matches)) {
-                $this->hours = (int) $matches[1];
+                $this->hours = (int)$matches[1];
             }
 
             if (preg_match($this->minutesRegex, $duration, $matches)) {
-                $this->minutes = (int) $matches[1];
+                $this->minutes = (int)$matches[1];
             }
 
             if (preg_match($this->secondsRegex, $duration, $matches)) {
-                $this->seconds = (float) $matches[1];
+                $this->seconds = (float)$matches[1];
             }
 
             return $this;
@@ -133,7 +134,7 @@ class Duration
      */
     public function toSeconds($duration = null, $precision = false)
     {
-        if (! is_null($duration)) {
+        if (!is_null($duration)) {
             $this->parse($duration);
         }
         $this->output = ($this->days * $this->hoursPerDay * 60 * 60) + ($this->hours * 60 * 60) + ($this->minutes * 60) + $this->seconds;
@@ -152,7 +153,7 @@ class Duration
      */
     public function toMinutes($duration = null, $precision = false)
     {
-        if (! is_null($duration)) {
+        if (!is_null($duration)) {
             $this->parse($duration);
         }
 
@@ -182,7 +183,7 @@ class Duration
     public function formatted($duration = null, $zeroFill = false)
     {
 
-        if (! is_null($duration)) {
+        if (!is_null($duration)) {
             $this->parse($duration);
         }
 
@@ -233,7 +234,7 @@ class Duration
      */
     public function humanize($duration = null)
     {
-        if (! is_null($duration)) {
+        if (!is_null($duration)) {
             $this->parse($duration);
         }
 
@@ -265,11 +266,11 @@ class Duration
      */
     private function reset()
     {
-        $this->output  = '';
+        $this->output = '';
         $this->seconds = 0;
         $this->minutes = 0;
-        $this->hours   = 0;
-        $this->days    = 0;
+        $this->hours = 0;
+        $this->days = 0;
     }
 
     /**
