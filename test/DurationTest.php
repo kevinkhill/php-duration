@@ -325,4 +325,26 @@ class DurationTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(91800, $d->toSeconds('2d 11h 30m'));
     }
 
+    public function testSupportDecimals()
+    {
+        $d = new Duration(null, 6);
+        
+        $this->assertEquals(6 * 60, $d->toMinutes('1d'));
+        $this->assertEquals((6 + 3) * 60, $d->toMinutes('1.5d'));
+        $this->assertEquals(60, $d->toMinutes('1h'));
+        $this->assertEquals(60 + 30, $d->toMinutes('1.5h'));
+        $this->assertEquals((12 * 60) + 60 + 30, $d->toMinutes('2d 1.5h'));        
+    }
+
+    public function testConvertHumanizedWithSupportDecimals()
+    {
+        $t = '1.5d 1.5h 2m 5s';    
+        
+        $this->assertEquals('1d 4h 32m 5s', (new Duration($t, 6))->humanize(), "Test humanize with: {$t}");
+        $this->assertEquals('10:32:05', (new Duration($t, 6))->formatted(), "Test formatted with: {$t}");
+        $this->assertEquals(37925, (new Duration($t, 6))->toSeconds(), "Test toSeconds with: {$t}");
+        $this->assertEquals(37925/60, (new Duration($t, 6))->toMinutes(), "Test toMinutes with: {$t}");
+        $this->assertEquals(632, (new Duration($t, 6))->toMinutes(null, 0), "Test toMinutes with: {$t}");    
+    }    
+
 }
