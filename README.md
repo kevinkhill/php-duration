@@ -55,6 +55,17 @@ echo $duration->toMinutes(null, 0); // 62
 ```
 
 ```php
+// Configured for 6 hours per day
+$duration = new Duration('1.5d 1.5h 2m 5s', 6);
+
+echo $duration->humanize();  // 1d 4h 32m 5s
+echo $duration->formatted(); // 10:32:05
+echo $duration->toSeconds(); // 37925
+echo $duration->toMinutes(); // 632.083333333
+echo $duration->toMinutes(null, 0); // 632
+```
+
+```php
 $duration = new Duration('4293');
 
 echo $duration->humanize();  // 1h 11m 33s

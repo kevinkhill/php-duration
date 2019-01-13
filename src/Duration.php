@@ -30,8 +30,8 @@ class Duration
         $this->seconds = 0;
 
         $this->output = '';
-        $this->daysRegex = '/([0-9]{1,2})\s?(?:d|D)/';
-        $this->hoursRegex = '/([0-9]{1,2})\s?(?:h|H)/';
+        $this->daysRegex = '/([0-9\.]+)\s?(?:d|D)/';
+        $this->hoursRegex = '/([0-9\.]+)\s?(?:h|H)/';
         $this->minutesRegex = '/([0-9]{1,2})\s?(?:m|M)/';
         $this->secondsRegex = '/([0-9]{1,2}(\.\d+)?)\s?(?:s|S)/';
 
@@ -102,19 +102,23 @@ class Duration
             preg_match($this->minutesRegex, $duration) ||
             preg_match($this->secondsRegex, $duration)) {
             if (preg_match($this->daysRegex, $duration, $matches)) {
-                $this->days = (int)$matches[1];
+                $num = $this->numberBreakdown((float) $matches[1]);
+                $this->days += (int)$num[0];
+                $this->hours += $num[1] * $this->hoursPerDay;                
             }
 
             if (preg_match($this->hoursRegex, $duration, $matches)) {
-                $this->hours = (int)$matches[1];
+                $num = $this->numberBreakdown((float) $matches[1]);            
+                $this->hours += (int)$num[0];
+                $this->minutes += $num[1] * 60;                       
             }
 
             if (preg_match($this->minutesRegex, $duration, $matches)) {
-                $this->minutes = (int)$matches[1];
+                $this->minutes += (int)$matches[1];
             }
 
             if (preg_match($this->secondsRegex, $duration, $matches)) {
-                $this->seconds = (float)$matches[1];
+                $this->seconds += (float)$matches[1];
             }
 
             return $this;
@@ -255,6 +259,29 @@ class Duration
         }
 
         return trim($this->output());
+    }
+
+
+    private function numberBreakdown($number, $returnUnsigned = false)
+    {
+        $negative = 1;
+
+        if ($number < 0) {
+            $negative = -1;
+            $number *= -1;
+        }
+
+        if ($returnUnsigned) {
+            return array(
+                floor($number),
+                ($number - floor($number))
+            );
+        }
+
+        return array(
+            floor($number) * $negative,
+            ($number - floor($number)) * $negative
+        );
     }
 
 
