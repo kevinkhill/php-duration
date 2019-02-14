@@ -14,6 +14,8 @@ class DurationTest extends PHPUnit_Framework_TestCase
     public function secondsSampleData()
     {
         return array(
+            array(false, null),
+            array(false, ' '),
             array(0, '0 s'),
             array(1, '1 s'),
             array(1, '1 sec'),
