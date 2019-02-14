@@ -14,6 +14,7 @@ class DurationTest extends PHPUnit_Framework_TestCase
     public function secondsSampleData()
     {
         return array(
+            array(0, '0 s'),
             array(1, '1 s'),
             array(1, '1 sec'),
             array(3, '3S'),
@@ -39,6 +40,7 @@ class DurationTest extends PHPUnit_Framework_TestCase
     public function minutesSampleData()
     {
         return array(
+            array(0, '0m'),
             array(1, '1 m'),
             array(4, '4 min'),
             array(6, '6M'),
@@ -61,6 +63,7 @@ class DurationTest extends PHPUnit_Framework_TestCase
     public function hoursSampleData()
     {
         return array(
+            array(0, '0h'),
             array(1, '1 h'),
             array(1, '1 hr'),
             array(1, '1H'),
@@ -84,6 +87,7 @@ class DurationTest extends PHPUnit_Framework_TestCase
     public function daysSampleData()
     {
         return array(
+            array(0, '0d'),
             array(1, '1 d'),
             array(1, '1 D'),
             array(1, '1D'),
@@ -106,6 +110,7 @@ class DurationTest extends PHPUnit_Framework_TestCase
 
     public function testConvertingSecondsToFormattedString()
     {
+        $this->assertEquals('0', $this->d->formatted(0));
         $this->assertEquals('4', $this->d->formatted(4));
         $this->assertEquals('9', $this->d->formatted(9));
         $this->assertEquals('42', $this->d->formatted(42));
@@ -122,6 +127,7 @@ class DurationTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('1:09:09', $this->d->formatted(4149));
 
         // microseconds
+        $this->assertEquals('0.0', $this->d->formatted(0.0));
         $this->assertEquals('4.987', $this->d->formatted(4.987));
         $this->assertEquals('9.123', $this->d->formatted(9.123));
         $this->assertEquals('42.672', $this->d->formatted(42.672));
@@ -140,6 +146,7 @@ class DurationTest extends PHPUnit_Framework_TestCase
 
     public function testConvertingSecondsToFormattedStringZeroFilled()
     {
+        $this->assertEquals('0:00:00', $this->d->formatted(0, true));
         $this->assertEquals('0:00:04', $this->d->formatted(4, true));
         $this->assertEquals('0:00:09', $this->d->formatted(9, true));
         $this->assertEquals('0:00:42', $this->d->formatted(42, true));
@@ -162,6 +169,7 @@ class DurationTest extends PHPUnit_Framework_TestCase
 
     public function testConvertingFormattedStringsToSeconds()
     {
+        $this->assertEquals(0, $this->d->toSeconds('0'));
         $this->assertEquals(4, $this->d->toSeconds('4'));
         $this->assertEquals(9, $this->d->toSeconds('9'));
         $this->assertEquals(42, $this->d->toSeconds('42'));
@@ -194,6 +202,7 @@ class DurationTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(4149.499999, $this->d->toSeconds('1:09:09.499999'));
 
         // precision
+        $this->assertEquals(0, $this->d->toSeconds('0', 0));
         $this->assertEquals(5, $this->d->toSeconds('4.6', 0));
         $this->assertEquals(10, $this->d->toSeconds('9.5', 0));
         $this->assertEquals(42.1, $this->d->toSeconds('42.1', 1));
@@ -212,6 +221,7 @@ class DurationTest extends PHPUnit_Framework_TestCase
 
     public function testConvertingFormattedStringsToMinutes()
     {
+        $this->assertEquals(0, $this->d->toMinutes('0'));
         $this->assertEquals(4 / 60, $this->d->toMinutes('4'));
         $this->assertEquals(9 / 60, $this->d->toMinutes('9'));
         $this->assertEquals(42 / 60, $this->d->toMinutes('42'));
@@ -228,6 +238,7 @@ class DurationTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(4149 / 60, $this->d->toMinutes('1:09:09'));
 
         // to integer - BC
+        $this->assertEquals(0, $this->d->toMinutes('0', true));
         $this->assertEquals(0, $this->d->toMinutes('4', true));
         $this->assertEquals(0, $this->d->toMinutes('9', true));
         $this->assertEquals(1, $this->d->toMinutes('42', true));
@@ -245,6 +256,7 @@ class DurationTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(69, $this->d->toMinutes('1:09:09', true));
 
         // precision
+        $this->assertEquals(0, $this->d->toMinutes('0', 0));
         $this->assertEquals(0, $this->d->toMinutes('4', 0));
         $this->assertEquals(0, $this->d->toMinutes('9', 0));
         $this->assertEquals(1, $this->d->toMinutes('42', 0));
@@ -261,6 +273,7 @@ class DurationTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(65, $this->d->toMinutes('1:04:55', 0));
         $this->assertEquals(69, $this->d->toMinutes('1:09:09', 0));
 
+        $this->assertEquals(0, $this->d->toMinutes('0', 1));
         $this->assertEquals(0.1, $this->d->toMinutes('4', 1));
         $this->assertEquals(0.15, $this->d->toMinutes('9', 2));
         $this->assertEquals(0.7, $this->d->toMinutes('42', 3));
@@ -280,6 +293,7 @@ class DurationTest extends PHPUnit_Framework_TestCase
 
     public function testConvertSecondsToHumanizedString()
     {
+        $this->assertEquals('0s', $this->d->humanize(0));
         $this->assertEquals('4s', $this->d->humanize(4));
         $this->assertEquals('42s', $this->d->humanize(42));
         $this->assertEquals('1m 2s', $this->d->humanize(62));
@@ -304,6 +318,7 @@ class DurationTest extends PHPUnit_Framework_TestCase
      */
     public function testConvertHumanizedStringToSeconds()
     {
+        $this->assertEquals(0, $this->d->toSeconds('0s'));
         $this->assertEquals(4, $this->d->toSeconds('4s'));
         $this->assertEquals(42, $this->d->toSeconds('42s'));
         $this->assertEquals(72, $this->d->toSeconds('1m 12s'));
@@ -321,6 +336,8 @@ class DurationTest extends PHPUnit_Framework_TestCase
     public function testConvertHumanizedStringToSeconds7HourDay()
     {
         $d = new Duration(null, 7);
+
+        $this->assertEquals(0, $d->toSeconds('0d'));
         $this->assertEquals(25200, $d->toSeconds('1d'));
         $this->assertEquals(91800, $d->toSeconds('2d 11h 30m'));
     }
@@ -328,23 +345,24 @@ class DurationTest extends PHPUnit_Framework_TestCase
     public function testSupportDecimals()
     {
         $d = new Duration(null, 6);
-        
+
+        $this->assertEquals(0, $d->toMinutes('0d'));
         $this->assertEquals(6 * 60, $d->toMinutes('1d'));
         $this->assertEquals((6 + 3) * 60, $d->toMinutes('1.5d'));
         $this->assertEquals(60, $d->toMinutes('1h'));
         $this->assertEquals(60 + 30, $d->toMinutes('1.5h'));
-        $this->assertEquals((12 * 60) + 60 + 30, $d->toMinutes('2d 1.5h'));        
+        $this->assertEquals((12 * 60) + 60 + 30, $d->toMinutes('2d 1.5h'));
     }
 
     public function testConvertHumanizedWithSupportDecimals()
     {
-        $t = '1.5d 1.5h 2m 5s';    
-        
+        $t = '1.5d 1.5h 2m 5s';
+
         $this->assertEquals('1d 4h 32m 5s', (new Duration($t, 6))->humanize(), "Test humanize with: {$t}");
         $this->assertEquals('10:32:05', (new Duration($t, 6))->formatted(), "Test formatted with: {$t}");
         $this->assertEquals(37925, (new Duration($t, 6))->toSeconds(), "Test toSeconds with: {$t}");
         $this->assertEquals(37925/60, (new Duration($t, 6))->toMinutes(), "Test toMinutes with: {$t}");
-        $this->assertEquals(632, (new Duration($t, 6))->toMinutes(null, 0), "Test toMinutes with: {$t}");    
-    }    
+        $this->assertEquals(632, (new Duration($t, 6))->toMinutes(null, 0), "Test toMinutes with: {$t}");
+    }
 
 }

@@ -20,16 +20,12 @@ class Duration
     /**
      * Duration constructor.
      *
-     * @param null $duration
+     * @param int|float|string|null $duration
      */
     public function __construct($duration = null, $hoursPerDay = 24)
     {
-        $this->days = 0;
-        $this->hours = 0;
-        $this->minutes = 0;
-        $this->seconds = 0;
+        $this->reset();
 
-        $this->output = '';
         $this->daysRegex = '/([0-9\.]+)\s?(?:d|D)/';
         $this->hoursRegex = '/([0-9\.]+)\s?(?:h|H)/';
         $this->minutesRegex = '/([0-9]{1,2})\s?(?:m|M)/';
@@ -37,7 +33,7 @@ class Duration
 
         $this->hoursPerDay = $hoursPerDay;
 
-        if (!is_null($duration)) {
+        if (null !== $duration) {
             $this->parse($duration);
         }
     }
@@ -45,12 +41,16 @@ class Duration
     /**
      * Attempt to parse one of the forms of duration.
      *
-     * @param  int|float|string $duration A string or number, representing a duration
+     * @param  int|float|string|null $duration A string or number, representing a duration
      * @return self|bool returns the Duration object if successful, otherwise false
      */
     public function parse($duration)
     {
         $this->reset();
+
+        if (null === $duration) {
+            return false;
+        }
 
         if (is_numeric($duration)) {
             $this->seconds = (float)$duration;
@@ -104,13 +104,13 @@ class Duration
             if (preg_match($this->daysRegex, $duration, $matches)) {
                 $num = $this->numberBreakdown((float) $matches[1]);
                 $this->days += (int)$num[0];
-                $this->hours += $num[1] * $this->hoursPerDay;                
+                $this->hours += $num[1] * $this->hoursPerDay;
             }
 
             if (preg_match($this->hoursRegex, $duration, $matches)) {
-                $num = $this->numberBreakdown((float) $matches[1]);            
+                $num = $this->numberBreakdown((float) $matches[1]);
                 $this->hours += (int)$num[0];
-                $this->minutes += $num[1] * 60;                       
+                $this->minutes += $num[1] * 60;
             }
 
             if (preg_match($this->minutesRegex, $duration, $matches)) {
@@ -138,7 +138,7 @@ class Duration
      */
     public function toSeconds($duration = null, $precision = false)
     {
-        if (!is_null($duration)) {
+        if (null !== $duration) {
             $this->parse($duration);
         }
         $this->output = ($this->days * $this->hoursPerDay * 60 * 60) + ($this->hours * 60 * 60) + ($this->minutes * 60) + $this->seconds;
@@ -157,7 +157,7 @@ class Duration
      */
     public function toMinutes($duration = null, $precision = false)
     {
-        if (!is_null($duration)) {
+        if (null !== $duration) {
             $this->parse($duration);
         }
 
@@ -180,14 +180,13 @@ class Duration
      *   - 42 minutes would be "0:42:00"
      *   - 28 seconds would be "0:00:28"
      *
-     * @param  int|float|string $duration A string or number, representing a duration
+     * @param  int|float|string|null $duration A string or number, representing a duration
      * @param  bool $zeroFill A boolean, to force zero-fill result or not (see example)
      * @return string
      */
     public function formatted($duration = null, $zeroFill = false)
     {
-
-        if (!is_null($duration)) {
+        if (null !== $duration) {
             $this->parse($duration);
         }
 
@@ -200,8 +199,10 @@ class Duration
                 $this->output .= $this->seconds;
             }
         } else {
-            if ($this->minutes > 0 || $hours > 0) {
+            if ($this->minutes > 0 || $hours > 0 || $zeroFill) {
                 $this->output = '00';
+            } else {
+                $this->output = '0';
             }
         }
 
@@ -238,11 +239,11 @@ class Duration
      */
     public function humanize($duration = null)
     {
-        if (!is_null($duration)) {
+        if (null !== $duration) {
             $this->parse($duration);
         }
 
-        if ($this->seconds > 0) {
+        if ($this->seconds > 0 || ($this->seconds === 0.0 && $this->minutes === 0 && $this->hours === 0 && $this->days === 0)) {
             $this->output .= $this->seconds . 's';
         }
 
@@ -294,7 +295,7 @@ class Duration
     private function reset()
     {
         $this->output = '';
-        $this->seconds = 0;
+        $this->seconds = 0.0;
         $this->minutes = 0;
         $this->hours = 0;
         $this->days = 0;
