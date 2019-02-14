@@ -13,10 +13,17 @@
             "name": "Kevin Hill",
             "email": "kevinkhill@gmail.com",
             "role": "Creator"
+        },
+        {
+            "name": "Duration Community",
+            "homepage": "https://github.com/kevinkhill/php-duration/contributors"
         }
     ],
+    "require": {
+        "php": ">=5.4"
+    },
     "require-dev": {
-        "phpunit/phpunit": "~4.8",
+        "phpunit/phpunit": "~4.8|~5.0",
         "satooshi/php-coveralls": "~1.0",
         "symfony/yaml": "~2.0",
         "symfony/config": "~2.0",
