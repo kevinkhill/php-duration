@@ -4,12 +4,17 @@ namespace Khill\Duration;
 
 class Duration
 {
+    public $years;
+    public $weeks;
+
     public $days;
     public $hours;
     public $minutes;
     public $seconds;
 
     public $hoursPerDay;
+    public $hoursPerWeek;
+    public $hoursPerYear;
 
     private $output;
     private $daysRegex;
@@ -22,9 +27,12 @@ class Duration
      *
      * @param int|float|string|null $duration
      */
-    public function __construct($duration = null, $hoursPerDay = 24)
+    public function __construct($duration = null, $hoursPerDay = 24, $hoursPerWeek = 168, $hoursPerYear = 8760)
     {
         $this->reset();
+
+        $this->yearsRegex = '/([0-9\.]+)\s?(?:y|Y)/';
+        $this->weeksRegex = '/([0-9\.]+)\s?(?:w|W)/';
 
         $this->daysRegex = '/([0-9\.]+)\s?(?:d|D)/';
         $this->hoursRegex = '/([0-9\.]+)\s?(?:h|H)/';
@@ -32,6 +40,8 @@ class Duration
         $this->secondsRegex = '/([0-9]{1,2}(\.\d+)?)\s?(?:s|S)/';
 
         $this->hoursPerDay = $hoursPerDay;
+        $this->hoursPerWeek = $hoursPerWeek;
+        $this->hoursPerYear = $hoursPerYear;
 
         if (null !== $duration) {
             $this->parse($duration);
@@ -77,6 +87,11 @@ class Duration
                 $this->hours = (int)($this->hours - ($this->days * $this->hoursPerDay));
             }
 
+            if ($this->weeks >= $this->hoursPerWeek) {
+                $this->days = (int)floor($this->hours / $this->hoursPerDay);
+                $this->hours = (int)($this->hours - ($this->days * $this->hoursPerDay));
+            }
+
             return $this;
         }
 
@@ -97,10 +112,24 @@ class Duration
             return $this;
         }
 
-        if (preg_match($this->daysRegex, $duration) ||
+        if (preg_match($this->yearsRegex, $duration) ||
+            preg_match($this->weeksRegex, $duration) ||
+            preg_match($this->daysRegex, $duration) ||
             preg_match($this->hoursRegex, $duration) ||
             preg_match($this->minutesRegex, $duration) ||
             preg_match($this->secondsRegex, $duration)) {
+        	if (preg_match($this->yearsRegex, $duration, $matches)) {
+                $num = $this->numberBreakdown((float) $matches[1]);
+                $this->weeks += (int)$num[0];
+                $this->days += $num[1] * $this->hoursPerDay;
+            }
+
+            if (preg_match($this->weeksRegex, $duration, $matches)) {
+                $num = $this->numberBreakdown((float) $matches[1]);
+                $this->weeks += (int)$num[0];
+                $this->days += $num[1] * $this->hoursPerDay;
+            }
+
             if (preg_match($this->daysRegex, $duration, $matches)) {
                 $num = $this->numberBreakdown((float) $matches[1]);
                 $this->days += (int)$num[0];
@@ -141,7 +170,7 @@ class Duration
         if (null !== $duration) {
             $this->parse($duration);
         }
-        $this->output = ($this->days * $this->hoursPerDay * 60 * 60) + ($this->hours * 60 * 60) + ($this->minutes * 60) + $this->seconds;
+        $this->output = ($this->weeks * $this->hoursPerWeek * 60 * 60) + ($this->days * $this->hoursPerDay * 60 * 60) + ($this->hours * 60 * 60) + ($this->minutes * 60) + $this->seconds;
 
         return $precision !== false ? round($this->output, $precision) : $this->output;
     }
@@ -259,6 +288,15 @@ class Duration
             $this->output = $this->days . 'd ' . $this->output;
         }
 
+        if ($this->weeks > 0) {
+            $this->output = $this->weeks . 'w ' . $this->output;
+        }
+
+        if ($this->years > 0) {
+            $this->output = $this->years . 'y ' . $this->output;
+        }
+
+
         return trim($this->output());
     }
 
@@ -299,6 +337,8 @@ class Duration
         $this->minutes = 0;
         $this->hours = 0;
         $this->days = 0;
+        $this->weeks = 0;
+        $this->years = 0;
     }
 
     /**
