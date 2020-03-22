@@ -181,48 +181,56 @@ class Duration
      *   - 28 seconds would be "0:00:28"
      *
      * @param  int|float|string|null $duration A string or number, representing a duration
-     * @param  bool $zeroFill A boolean, to force zero-fill result or not (see example)
+     * @param  string $zeroFill A string, to force format zero-fill result or not (see example)
      * @return string
      */
-    public function formatted($duration = null, $zeroFill = false)
+    public function formatted($duration = null, $zeroFill = '')
     {
         if (null !== $duration) {
             $this->parse($duration);
         }
 
         $hours = $this->hours + ($this->days * $this->hoursPerDay);
+        $aux = array_reverse(explode(":", $zeroFill));
 
         if ($this->seconds > 0) {
-            if ($this->seconds < 10 && ($this->minutes > 0 || $hours > 0 || $zeroFill)) {
+            if ($this->seconds < 10 && ($this->minutes > 0 || $hours > 0 || (count($aux) > 0))) {
                 $this->output .= '0' . $this->seconds;
             } else {
                 $this->output .= $this->seconds;
             }
         } else {
-            if ($this->minutes > 0 || $hours > 0 || $zeroFill) {
+            if ($this->minutes > 0 || $hours > 0) {
                 $this->output = '00';
             } else {
-                $this->output = '0';
+                $this->output = (count($aux) > 0) ? str_repeat('0', strlen($aux[0])) : '0';
             }
         }
 
         if ($this->minutes > 0) {
-            if ($this->minutes <= 9 && ($hours > 0 || $zeroFill)) {
+            if ($this->minutes <= 9 && ($hours > 0 || (count($aux) > 1 && strlen($aux[1]) > 1))) {
                 $this->output = '0' . $this->minutes . ':' . $this->output;
             } else {
                 $this->output = $this->minutes . ':' . $this->output;
             }
         } else {
-            if ($hours > 0 || $zeroFill) {
-                $this->output = '00' . ':' . $this->output;
+            if ($hours > 0) {
+                if (count($aux) > 1) {
+                  $this->output = str_repeat('0', strlen($aux[1])) . ':' . $this->output;
+                } else {
+                  $this->output = '0:' . $this->output;
+                }
+            } else if (count($aux) > 1) {
+                $this->output = str_repeat('0', strlen($aux[1])) . ':' . $this->output;
             }
+            
         }
 
         if ($hours > 0) {
             $this->output = $hours . ':' . $this->output;
         } else {
-            if ($zeroFill) {
-                $this->output = '0' . ':' . $this->output;
+            if (count($aux) > 2) {
+              $this->output = str_repeat('0', strlen($aux[2])) . ':' . $this->output;
             }
         }
 
@@ -316,4 +324,3 @@ class Duration
         return $out;
     }
 }
-
