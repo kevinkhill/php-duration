@@ -4,23 +4,61 @@ namespace Khill\Duration;
 
 class Duration
 {
+    /**
+     * @var int|float|null
+     */
     public $days;
+
+    /**
+     * @var int|float|null
+     */
     public $hours;
+
+    /**
+     * @var int|float|null
+     */
     public $minutes;
+
+    /**
+     * @var int|float|null
+     */
     public $seconds;
 
+    /**
+     * @var int|null
+     */
     public $hoursPerDay;
 
+    /**
+     * @var string|int
+     */
     private $output;
+
+    /**
+     * @var string
+     */
     private $daysRegex;
+
+    /**
+     * @var string
+     */
     private $hoursRegex;
+
+    /**
+     * @var string
+     */
     private $minutesRegex;
+
+    /**
+     * @var string
+     */
     private $secondsRegex;
 
     /**
      * Duration constructor.
      *
      * @param int|float|string|null $duration
+     * @param int $hoursPerDay
      */
     public function __construct($duration = null, $hoursPerDay = 24)
     {
@@ -60,8 +98,8 @@ class Duration
 
                 // count current precision
                 $precision = 0;
-                if (($delimiterPos = strpos($this->seconds, '.')) !== false) {
-                    $precision = strlen(substr($this->seconds, $delimiterPos + 1));
+                if (($delimiterPos = strpos((string)$this->seconds, '.')) !== false) {
+                    $precision = strlen(substr((string)$this->seconds, $delimiterPos + 1));
                 }
 
                 $this->seconds = (float)round(($this->seconds - ($this->minutes * 60)), $precision);
@@ -263,20 +301,17 @@ class Duration
     }
 
 
-    private function numberBreakdown($number, $returnUnsigned = false)
+    /**
+     * @param float $number
+     * @return array|float[]|int[]
+     */
+    private function numberBreakdown($number)
     {
         $negative = 1;
 
         if ($number < 0) {
             $negative = -1;
             $number *= -1;
-        }
-
-        if ($returnUnsigned) {
-            return array(
-                floor($number),
-                ($number - floor($number))
-            );
         }
 
         return array(
