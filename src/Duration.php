@@ -6,63 +6,30 @@ namespace Khill\Duration;
 
 class Duration
 {
-    /**
-     * @var int|float|null
-     */
-    public $days;
+    public int|null|float $days;
 
-    /**
-     * @var int|float|null
-     */
-    public $hours;
+    public int|null|float $hours;
 
-    /**
-     * @var int|float|null
-     */
-    public $minutes;
+    public int|null|float $minutes;
 
-    /**
-     * @var int|float|null
-     */
-    public $seconds;
+    public int|null|float $seconds;
 
-    /**
-     * @var int|null
-     */
-    public $hoursPerDay;
+    public ?int $hoursPerDay;
 
-    /**
-     * @var string|int
-     */
-    private $output;
+    private string|int|float $output;
 
-    /**
-     * @var string
-     */
-    private $daysRegex;
+    private string $daysRegex;
 
-    /**
-     * @var string
-     */
-    private $hoursRegex;
+    private string $hoursRegex;
 
-    /**
-     * @var string
-     */
-    private $minutesRegex;
+    private string $minutesRegex;
 
-    /**
-     * @var string
-     */
-    private $secondsRegex;
+    private string $secondsRegex;
 
     /**
      * Duration constructor.
-     *
-     * @param  int|float|string|null  $duration
-     * @param  int  $hoursPerDay
      */
-    public function __construct($duration = null, $hoursPerDay = 24)
+    public function __construct(float|int|string $duration = null, int $hoursPerDay = 24)
     {
         $this->reset();
 
@@ -81,10 +48,10 @@ class Duration
     /**
      * Attempt to parse one of the forms of duration.
      *
-     * @param  int|float|string|null  $duration A string or number, representing a duration
+     * @param  float|int|string|null  $duration A string or number, representing a duration
      * @return self|bool returns the Duration object if successful, otherwise false
      */
-    public function parse($duration)
+    public function parse(float|int|string|null $duration): bool|Duration|static
     {
         $this->reset();
 
@@ -172,11 +139,10 @@ class Duration
      *
      * For example, one hour and 42 minutes would be "6120"
      *
-     * @param  int|float|string  $duration A string or number, representing a duration
-     * @param  int|bool  $precision Number of decimal digits to round to. If set to false, the number is not rounded.
-     * @return int|float
+     * @param  float|int|string|null  $duration A string or number, representing a duration
+     * @param  bool|int  $precision Number of decimal digits to round to. If set to false, the number is not rounded.
      */
-    public function toSeconds($duration = null, $precision = false)
+    public function toSeconds(float|int|string $duration = null, bool|int $precision = false): float|int|string|null
     {
         if (null !== $duration) {
             $this->parse($duration);
@@ -191,11 +157,10 @@ class Duration
      *
      * For example, one hour and 42 minutes would be "102" minutes
      *
-     * @param  int|float|string  $duration A string or number, representing a duration
-     * @param  int|bool  $precision Number of decimal digits to round to. If set to false, the number is not rounded.
-     * @return int|float
+     * @param  float|int|string|null  $duration A string or number, representing a duration
+     * @param  bool|int  $precision Number of decimal digits to round to. If set to false, the number is not rounded.
      */
-    public function toMinutes($duration = null, $precision = false)
+    public function toMinutes(float|int|string $duration = null, bool|int $precision = false): float|int
     {
         if (null !== $duration) {
             $this->parse($duration);
@@ -220,11 +185,11 @@ class Duration
      *   - 42 minutes would be "0:42:00"
      *   - 28 seconds would be "0:00:28"
      *
-     * @param  int|float|string|null  $duration A string or number, representing a duration
+     * @param  float|int|string|null  $duration A string or number, representing a duration
      * @param  bool  $zeroFill A boolean, to force zero-fill result or not (see example)
      * @return string
      */
-    public function formatted($duration = null, $zeroFill = false)
+    public function formatted(float|int|string $duration = null, bool $zeroFill = false): int|string
     {
         if (null !== $duration) {
             $this->parse($duration);
@@ -275,9 +240,8 @@ class Duration
      * For example, one hour and 42 minutes would be "1h 42m"
      *
      * @param  int|float|string  $duration A string or number, representing a duration
-     * @return string
      */
-    public function humanize($duration = null)
+    public function humanize(float|int|string $duration = null): string
     {
         if (null !== $duration) {
             $this->parse($duration);
@@ -303,10 +267,9 @@ class Duration
     }
 
     /**
-     * @param  float  $number
-     * @return array|float[]|int[]
+     * @return array<int, int|float>
      */
-    private function numberBreakdown($number)
+    private function numberBreakdown(float $number): array
     {
         $negative = 1;
 
@@ -323,10 +286,8 @@ class Duration
 
     /**
      * Resets the Duration object by clearing the output and values.
-     *
-     * @return void
      */
-    private function reset()
+    private function reset(): void
     {
         $this->output = '';
         $this->seconds = 0.0;
@@ -337,10 +298,8 @@ class Duration
 
     /**
      * Returns the output of the Duration object and resets.
-     *
-     * @return string
      */
-    private function output()
+    private function output(): int|string|float
     {
         $out = $this->output;
 
