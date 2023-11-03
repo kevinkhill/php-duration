@@ -102,7 +102,7 @@ test('Converting Seconds To Formatted String', function () {
     assertEquals('1:09:09', $this->duration->formatted(4149));
 
     // microseconds
-    assertEquals('0.0', $this->duration->formatted(0.0));
+    assertEquals('0', $this->duration->formatted(0.0));
     assertEquals('4.987', $this->duration->formatted(4.987));
     assertEquals('9.123', $this->duration->formatted(9.123));
     assertEquals('42.672', $this->duration->formatted(42.672));
