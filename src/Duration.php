@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Khill\Duration;
 
 class Duration
@@ -57,8 +59,8 @@ class Duration
     /**
      * Duration constructor.
      *
-     * @param int|float|string|null $duration
-     * @param int $hoursPerDay
+     * @param  int|float|string|null  $duration
+     * @param  int  $hoursPerDay
      */
     public function __construct($duration = null, $hoursPerDay = 24)
     {
@@ -79,7 +81,7 @@ class Duration
     /**
      * Attempt to parse one of the forms of duration.
      *
-     * @param  int|float|string|null $duration A string or number, representing a duration
+     * @param  int|float|string|null  $duration A string or number, representing a duration
      * @return self|bool returns the Duration object if successful, otherwise false
      */
     public function parse($duration)
@@ -91,28 +93,28 @@ class Duration
         }
 
         if (is_numeric($duration)) {
-            $this->seconds = (float)$duration;
+            $this->seconds = (float) $duration;
 
             if ($this->seconds >= 60) {
-                $this->minutes = (int)floor($this->seconds / 60);
+                $this->minutes = (int) floor($this->seconds / 60);
 
                 // count current precision
                 $precision = 0;
-                if (($delimiterPos = strpos((string)$this->seconds, '.')) !== false) {
-                    $precision = strlen(substr((string)$this->seconds, $delimiterPos + 1));
+                if (($delimiterPos = strpos((string) $this->seconds, '.')) !== false) {
+                    $precision = strlen(substr((string) $this->seconds, $delimiterPos + 1));
                 }
 
-                $this->seconds = (float)round(($this->seconds - ($this->minutes * 60)), $precision);
+                $this->seconds = (float) round(($this->seconds - ($this->minutes * 60)), $precision);
             }
 
             if ($this->minutes >= 60) {
-                $this->hours = (int)floor($this->minutes / 60);
-                $this->minutes = (int)($this->minutes - ($this->hours * 60));
+                $this->hours = (int) floor($this->minutes / 60);
+                $this->minutes = (int) ($this->minutes - ($this->hours * 60));
             }
 
             if ($this->hours >= $this->hoursPerDay) {
-                $this->days = (int)floor($this->hours / $this->hoursPerDay);
-                $this->hours = (int)($this->hours - ($this->days * $this->hoursPerDay));
+                $this->days = (int) floor($this->hours / $this->hoursPerDay);
+                $this->hours = (int) ($this->hours - ($this->days * $this->hoursPerDay));
             }
 
             return $this;
@@ -121,14 +123,14 @@ class Duration
         if (preg_match('/\:/', $duration)) {
             $parts = explode(':', $duration);
 
-            if (count($parts) == 2) {
-                $this->minutes = (int)$parts[0];
-                $this->seconds = (float)$parts[1];
+            if (2 == count($parts)) {
+                $this->minutes = (int) $parts[0];
+                $this->seconds = (float) $parts[1];
             } else {
-                if (count($parts) == 3) {
-                    $this->hours = (int)$parts[0];
-                    $this->minutes = (int)$parts[1];
-                    $this->seconds = (float)$parts[2];
+                if (3 == count($parts)) {
+                    $this->hours = (int) $parts[0];
+                    $this->minutes = (int) $parts[1];
+                    $this->seconds = (float) $parts[2];
                 }
             }
 
@@ -141,22 +143,22 @@ class Duration
             preg_match($this->secondsRegex, $duration)) {
             if (preg_match($this->daysRegex, $duration, $matches)) {
                 $num = $this->numberBreakdown((float) $matches[1]);
-                $this->days += (int)$num[0];
+                $this->days += (int) $num[0];
                 $this->hours += $num[1] * $this->hoursPerDay;
             }
 
             if (preg_match($this->hoursRegex, $duration, $matches)) {
                 $num = $this->numberBreakdown((float) $matches[1]);
-                $this->hours += (int)$num[0];
+                $this->hours += (int) $num[0];
                 $this->minutes += $num[1] * 60;
             }
 
             if (preg_match($this->minutesRegex, $duration, $matches)) {
-                $this->minutes += (int)$matches[1];
+                $this->minutes += (int) $matches[1];
             }
 
             if (preg_match($this->secondsRegex, $duration, $matches)) {
-                $this->seconds += (float)$matches[1];
+                $this->seconds += (float) $matches[1];
             }
 
             return $this;
@@ -170,8 +172,8 @@ class Duration
      *
      * For example, one hour and 42 minutes would be "6120"
      *
-     * @param  int|float|string $duration A string or number, representing a duration
-     * @param  int|bool $precision Number of decimal digits to round to. If set to false, the number is not rounded.
+     * @param  int|float|string  $duration A string or number, representing a duration
+     * @param  int|bool  $precision Number of decimal digits to round to. If set to false, the number is not rounded.
      * @return int|float
      */
     public function toSeconds($duration = null, $precision = false)
@@ -181,7 +183,7 @@ class Duration
         }
         $this->output = ($this->days * $this->hoursPerDay * 60 * 60) + ($this->hours * 60 * 60) + ($this->minutes * 60) + $this->seconds;
 
-        return $precision !== false ? round($this->output, $precision) : $this->output;
+        return false !== $precision ? round($this->output, $precision) : $this->output;
     }
 
     /**
@@ -189,8 +191,8 @@ class Duration
      *
      * For example, one hour and 42 minutes would be "102" minutes
      *
-     * @param  int|float|string $duration A string or number, representing a duration
-     * @param  int|bool $precision Number of decimal digits to round to. If set to false, the number is not rounded.
+     * @param  int|float|string  $duration A string or number, representing a duration
+     * @param  int|bool  $precision Number of decimal digits to round to. If set to false, the number is not rounded.
      * @return int|float
      */
     public function toMinutes($duration = null, $precision = false)
@@ -200,14 +202,14 @@ class Duration
         }
 
         // backward compatibility, true = round to integer
-        if ($precision === true) {
+        if (true === $precision) {
             $precision = 0;
         }
 
         $this->output = ($this->days * $this->hoursPerDay * 60 * 60) + ($this->hours * 60 * 60) + ($this->minutes * 60) + $this->seconds;
         $result = intval($this->output()) / 60;
 
-        return $precision !== false ? round($result, $precision) : $result;
+        return false !== $precision ? round($result, $precision) : $result;
     }
 
     /**
@@ -218,8 +220,8 @@ class Duration
      *   - 42 minutes would be "0:42:00"
      *   - 28 seconds would be "0:00:28"
      *
-     * @param  int|float|string|null $duration A string or number, representing a duration
-     * @param  bool $zeroFill A boolean, to force zero-fill result or not (see example)
+     * @param  int|float|string|null  $duration A string or number, representing a duration
+     * @param  bool  $zeroFill A boolean, to force zero-fill result or not (see example)
      * @return string
      */
     public function formatted($duration = null, $zeroFill = false)
@@ -232,7 +234,7 @@ class Duration
 
         if ($this->seconds > 0) {
             if ($this->seconds < 10 && ($this->minutes > 0 || $hours > 0 || $zeroFill)) {
-                $this->output .= '0' . $this->seconds;
+                $this->output .= '0'.$this->seconds;
             } else {
                 $this->output .= $this->seconds;
             }
@@ -246,21 +248,21 @@ class Duration
 
         if ($this->minutes > 0) {
             if ($this->minutes <= 9 && ($hours > 0 || $zeroFill)) {
-                $this->output = '0' . $this->minutes . ':' . $this->output;
+                $this->output = '0'.$this->minutes.':'.$this->output;
             } else {
-                $this->output = $this->minutes . ':' . $this->output;
+                $this->output = $this->minutes.':'.$this->output;
             }
         } else {
             if ($hours > 0 || $zeroFill) {
-                $this->output = '00' . ':' . $this->output;
+                $this->output = '00'.':'.$this->output;
             }
         }
 
         if ($hours > 0) {
-            $this->output = $hours . ':' . $this->output;
+            $this->output = $hours.':'.$this->output;
         } else {
             if ($zeroFill) {
-                $this->output = '0' . ':' . $this->output;
+                $this->output = '0'.':'.$this->output;
             }
         }
 
@@ -272,7 +274,7 @@ class Duration
      *
      * For example, one hour and 42 minutes would be "1h 42m"
      *
-     * @param  int|float|string $duration A string or number, representing a duration
+     * @param  int|float|string  $duration A string or number, representing a duration
      * @return string
      */
     public function humanize($duration = null)
@@ -281,28 +283,27 @@ class Duration
             $this->parse($duration);
         }
 
-        if ($this->seconds > 0 || ($this->seconds === 0.0 && $this->minutes === 0 && $this->hours === 0 && $this->days === 0)) {
-            $this->output .= $this->seconds . 's';
+        if ($this->seconds > 0 || (0.0 === $this->seconds && 0 === $this->minutes && 0 === $this->hours && 0 === $this->days)) {
+            $this->output .= $this->seconds.'s';
         }
 
         if ($this->minutes > 0) {
-            $this->output = $this->minutes . 'm ' . $this->output;
+            $this->output = $this->minutes.'m '.$this->output;
         }
 
         if ($this->hours > 0) {
-            $this->output = $this->hours . 'h ' . $this->output;
+            $this->output = $this->hours.'h '.$this->output;
         }
 
         if ($this->days > 0) {
-            $this->output = $this->days . 'd ' . $this->output;
+            $this->output = $this->days.'d '.$this->output;
         }
 
         return trim($this->output());
     }
 
-
     /**
-     * @param float $number
+     * @param  float  $number
      * @return array|float[]|int[]
      */
     private function numberBreakdown($number)
@@ -314,17 +315,15 @@ class Duration
             $number *= -1;
         }
 
-        return array(
+        return [
             floor($number) * $negative,
-            ($number - floor($number)) * $negative
-        );
+            ($number - floor($number)) * $negative,
+        ];
     }
-
 
     /**
      * Resets the Duration object by clearing the output and values.
      *
-     * @access private
      * @return void
      */
     private function reset()
@@ -339,7 +338,6 @@ class Duration
     /**
      * Returns the output of the Duration object and resets.
      *
-     * @access private
      * @return string
      */
     private function output()
@@ -351,4 +349,3 @@ class Duration
         return $out;
     }
 }
-

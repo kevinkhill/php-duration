@@ -1,0 +1,19 @@
+{
+    "preset": "laravel",
+    "exclude": [
+        "config",
+        "build"
+    ],
+    "notPath": [
+        "ray.php",
+        "composer-setup.php"
+    ],
+    "rules": {
+        "declare_strict_types": true,
+        "single_trait_insert_per_statement": true,
+        "new_with_braces" : {
+            "anonymous_class": false
+        },
+        "yoda_style": true
+    }
+}

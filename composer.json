@@ -20,18 +20,13 @@
         }
     ],
     "require": {
-        "php": ">=5.4"
+        "php": "^8.1"
     },
     "require-dev": {
-        "phpstan/phpstan": "^0.12.81",
-        "phpunit/phpunit": "~4.8|~5.0",
-        "satooshi/php-coveralls": "~1.0",
-        "symfony/yaml": "~2.0",
-        "symfony/config": "~2.0",
-        "symfony/console": "~2.0",
-        "symfony/stopwatch": "~2.0",
-        "symfony/filesystem": "~2.0",
-        "doctrine/instantiator": "1.0.4"
+        "composer-runtime-api": "^2.2",
+        "phpstan/phpstan": "^1.10.40",
+        "pestphp/pest": "^2.24.2",
+        "laravel/pint": "^1.13.5"
     },
     "autoload": {
         "psr-4": {
@@ -39,8 +34,14 @@
         }
     },
     "scripts": {
-        "test": "phpunit -c phpunit.xml",
+        "test": "vendor/bin/pest --parallel",
+        "format": "vendor/bin/pint",
         "phpstan": "vendor/bin/phpstan"
     },
-    "minimum-stability": "stable"
+    "minimum-stability": "stable",
+    "config": {
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        }
+    }
 }
